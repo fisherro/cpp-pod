@@ -1,3 +1,3 @@
 CXXFLAGS+=-std=c++23
 
-all: test cal
+all: test cal ccal
