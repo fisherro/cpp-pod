@@ -21,18 +21,18 @@ namespace v = std::views;
 // Line makes it easy to read lines from an istream.
 
 struct Line {
-    std::string text;
+    s::string text;
 };
 
-std::ostream& operator<<(std::ostream& out, const Line& line)
+s::ostream& operator<<(s::ostream& out, const Line& line)
 {
     out << line.text;
     return out;
 }
 
-std::istream& operator>>(std::istream& in, Line& line)
+s::istream& operator>>(s::istream& in, Line& line)
 {
-    std::getline(in, line.text);
+    s::getline(in, line.text);
     return in;
 }
 
@@ -67,7 +67,7 @@ int main(const int argc, const char** argv)
         return s::regex_search(line, pattern);
     };
 
-    // Turn an <int, std::string> tuple-like object into a string:
+    // Turn an <int, string> tuple-like object into a string:
     auto stringify = [](const auto& tuple)
     {
         const auto& [number, line] = tuple;
