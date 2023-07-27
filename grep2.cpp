@@ -65,7 +65,6 @@ int main(const int argc, const char** argv)
                         | v::transform(&Line::text));
             });
     auto joined = lines | v::join;
-#if 0
     auto filtered = joined | v::filter(
             [&pattern](auto tuple)
             {
@@ -73,8 +72,6 @@ int main(const int argc, const char** argv)
                 return s::regex_search(text, pattern);
             });
     auto output = filtered | v::transform(
-#endif
-    auto output = joined | v::transform(
             [](auto tuple)
             {
                 auto [file, _, number, text] = tuple;
