@@ -65,7 +65,7 @@ int main(const int argc, const char** argv)
             | v::filter(
                 [&pattern](auto tuple)
                 {
-                auto [file, stream, number, text] = tuple;
+                [[maybe_unused]] auto [file, stream, number, text] = tuple;
                 return s::regex_search(text, pattern);
                 })
             | v::transform(
