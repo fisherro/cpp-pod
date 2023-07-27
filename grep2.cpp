@@ -40,7 +40,6 @@ s::istream& operator>>(s::istream& in, Line& line)
 
 int main(const int argc, const char** argv)
 {
-    // Turn argv into a vector:
     s::vector<s::string_view> args(argv + 1, argv + argc);
 
     if (args.size() < 2) {
@@ -48,14 +47,12 @@ int main(const int argc, const char** argv)
         return EXIT_FAILURE;
     }
 
-    // Create regex:
-    // Can't construct regex from a string_view, so use iterators.
     s::regex pattern = s::regex(begin(args[0]), end(args[0]));
 
-    auto files = r::subrange(args.begin() + 1, args.end());
-    auto lines = files | v::transform(
-            [](s::string_view file)
-            {
+    r::copy(r::subrange(args.begin() + 1, args.end())
+            | v::transform(
+                [](s::string_view file)
+                {
                 auto stream = s::make_shared<s::ifstream>(s::string(file));
                 return v::zip(
                         v::repeat(file),
@@ -63,23 +60,22 @@ int main(const int argc, const char** argv)
                         v::iota(1),
                         r::istream_view<Line>(*stream)
                         | v::transform(&Line::text));
-            });
-    auto joined = lines | v::join;
-    auto filtered = joined | v::filter(
-            [&pattern](auto tuple)
-            {
+                })
+            | v::join
+            | v::filter(
+                [&pattern](auto tuple)
+                {
                 auto [file, stream, number, text] = tuple;
                 return s::regex_search(text, pattern);
-            });
-    auto output = filtered | v::transform(
-            [](auto tuple)
-            {
+                })
+            | v::transform(
+                [](auto tuple)
+                {
                 auto [file, _, number, text] = tuple;
                 return s::format("{}({}): {}", file, number, text);
-            });
-    r::copy(output,
-            s::ostream_iterator<s::string>(s::cout, "\n"));
+                }),
+                s::ostream_iterator<s::string>(s::cout, "\n"));
 
-    return EXIT_SUCCESS;
+            return EXIT_SUCCESS;
 }
 
