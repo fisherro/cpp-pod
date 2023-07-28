@@ -1,3 +1,8 @@
 CXXFLAGS+=-std=c++23 -Werror -Wpedantic -Wall -Wextra
 
-all: test cal ccal grep grep2 grep2-debug problem
+progs=test cal ccal grep grep2 grep2-debug problem
+
+all: $(progs)
+
+clean:
+	-rm $(progs)
