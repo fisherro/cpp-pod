@@ -62,5 +62,6 @@ int main()
             | v::transform([](auto r){ return r | v::join_with(' '); })
             | v::join_with('\n'),
             s::ostream_iterator<char>(s::cout));
+    x::println("");
 }
 
