@@ -18,15 +18,6 @@ namespace c = std::chrono;
 namespace r = std::ranges;
 namespace v = std::views;
 
-// Should use a concept for the view
-void print_view(auto view, s::string_view delimiter = "")
-{
-    for (const auto& element: view) {
-        x::print("{}{}", element, delimiter);
-    }
-    x::println("");
-}
-
 // Pad a string with spaces on the left to fit the given width.
 // e.g. lpad("x", 5) => "    x"
 s::string lpad(s::string_view sv, int width)
