@@ -1,3 +1,5 @@
+// Note that this has improvements over cal.cpp
+
 #include "libx.hpp"
 
 #include <iostream>
@@ -40,12 +42,25 @@ int main()
     const c::weekday weekday{c::sys_days{today.year()/today.month()/1d}};
     const unsigned day_count {
         c::year_month_day_last{today.year()/today.month()/c::last}.day()};
-    x::println("{:^21%B %Y}", today);
-    const auto days = v::iota( 1U , day_count + 1 )
+    x::println("{:^20%B %Y}", today);
+
+    r::copy(v::iota(0U, 7U)
+            | v::transform([](unsigned i){ return c::weekday{i}; })
+            | v::transform([](c::weekday wd){ return s::format("{:%A}", wd); })
+            | v::transform([](s::string s){ return s::format("{:.2}", s); })
+            | v::join_with(' '),
+            s::ostream_iterator<char>(s::cout));
+    x::println("");
+
+    const auto days = v::iota(1U , day_count + 1)
         | v::transform([](auto x){ return s::to_string(x); })
-        | v::transform(x::bind_back(lpad, 3));
-    s::vector<s::string> days_padded(weekday.c_encoding(), "   ");
+        | v::transform(x::bind_back(lpad, 2));
+    s::vector<s::string> days_padded(weekday.c_encoding(), "  ");
     r::copy(days, s::back_inserter(days_padded));
-    print_view(days_padded | v::chunk(7) | v::join_with("\n"));
+    r::copy(days_padded
+            | v::chunk(7)
+            | v::transform([](auto r){ return r | v::join_with(' '); })
+            | v::join_with('\n'),
+            s::ostream_iterator<char>(s::cout));
 }
 
